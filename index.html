@@ -1,0 +1,1347 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Minha Lista de Compras</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #f97ba8;
+    --primary-light: #fcd6e3;
+    --primary-lighter: #fde9f0;
+    --accent: #f97ba8;
+    --accent-soft: rgba(249, 123, 168, 0.1);
+    --success: #6ec66c;
+    --danger: #e74c3c;
+    --bg: #fafafa;
+    --bg-secondary: #fff;
+    --border: #e8d5e0;
+    --text: #3a3a3a;
+    --text-light: #666;
+    --text-lighter: #999;
+    --shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+    --radius: 12px;
+    --radius-lg: 16px;
+  }
+
+  *, *::before, *::after { 
+    box-sizing: border-box; 
+    margin: 0; 
+    padding: 0; 
+  }
+
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+    line-height: 1.6;
+  }
+
+  /* ── SCREENS ── */
+  .screen { display: none; animation: fadeIn 0.3s ease; }
+  .screen.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+  /* ── HEADER ── */
+  header {
+    padding: 24px 16px;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border);
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .logo {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: var(--primary);
+    text-align: center;
+    letter-spacing: -0.02em;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 24px 16px;
+    text-align: center;
+    background: linear-gradient(135deg, rgba(249,123,168,0.05) 0%, rgba(249,123,168,0.02) 100%);
+  }
+
+  .hero h1 {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
+    font-size: clamp(1.8rem, 8vw, 2.2rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+
+  .hero h1 .accent { color: var(--primary); }
+
+  .hero p {
+    color: var(--text-light);
+    font-size: 0.95rem;
+    font-weight: 300;
+  }
+
+  /* ── LISTS SCREEN ── */
+  .lists-container {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 16px;
+  }
+
+  .new-list-btn {
+    width: 100%;
+    padding: 16px;
+    border: 2px dashed var(--border);
+    border-radius: var(--radius-lg);
+    background: transparent;
+    color: var(--primary);
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+
+  .new-list-btn:hover {
+    border-color: var(--primary);
+    background: var(--accent-soft);
+  }
+
+  .new-list-btn svg { width: 20px; height: 20px; }
+
+  .section-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-lighter);
+    margin-bottom: 12px;
+    padding: 0 0;
+  }
+
+  .lists-grid {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: 1fr;
+  }
+
+  .list-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .list-card:hover {
+    border-color: var(--primary);
+    background: var(--primary-lighter);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .list-card-info { flex: 1; min-width: 0; }
+
+  .list-card-name {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .list-card-meta {
+    font-size: 0.8rem;
+    color: var(--text-lighter);
+    margin-top: 4px;
+  }
+
+  .list-card-total {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--primary);
+    white-space: nowrap;
+  }
+
+  .list-card-actions {
+    display: flex;
+    gap: 6px;
+  }
+
+  .icon-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-light);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+
+  .icon-btn:hover { 
+    color: var(--text); 
+    border-color: var(--primary);
+    background: var(--primary-light);
+  }
+
+  .icon-btn.danger:hover { 
+    color: var(--danger); 
+    border-color: var(--danger);
+    background: rgba(231, 76, 60, 0.1);
+  }
+
+  .icon-btn.clone:hover { 
+    color: var(--primary); 
+    border-color: var(--primary);
+    background: var(--accent-soft);
+  }
+
+  .icon-btn svg { width: 18px; height: 18px; }
+
+  .empty-state {
+    text-align: center;
+    padding: 48px 20px;
+    color: var(--text-lighter);
+  }
+
+  .empty-state svg { width: 48px; height: 48px; margin-bottom: 12px; opacity: 0.3; }
+  .empty-state p { font-size: 0.9rem; }
+
+  /* ── DETAIL HEADER ── */
+  .detail-header {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .back-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-light);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+
+  .back-btn:hover { 
+    color: var(--primary); 
+    border-color: var(--primary);
+    background: var(--accent-soft);
+  }
+
+  .back-btn svg { width: 20px; height: 20px; }
+
+  .detail-title-wrap { flex: 1; min-width: 0; }
+
+  .detail-title-input {
+    background: transparent;
+    border: none;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
+    font-size: clamp(1.3rem, 5vw, 1.8rem);
+    color: var(--text);
+    width: 100%;
+    outline: none;
+    letter-spacing: -0.02em;
+    border-bottom: 2px solid transparent;
+    transition: border-color 0.2s;
+    padding: 2px 0;
+  }
+
+  .detail-title-input:focus { border-bottom-color: var(--primary); }
+  .detail-title-input::placeholder { color: var(--text-lighter); }
+
+  .detail-content {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 16px;
+  }
+
+  /* ── TOTALS BAR ── */
+  .totals-bar {
+    background: linear-gradient(135deg, var(--primary-lighter) 0%, var(--primary-light) 100%);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 16px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .totals-stat { 
+    text-align: center;
+  }
+
+  .totals-stat-label { 
+    font-size: 0.7rem; 
+    color: var(--text-light); 
+    text-transform: uppercase; 
+    letter-spacing: 0.06em;
+    font-weight: 500;
+  }
+
+  .totals-stat-value {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
+    font-size: 1.3rem;
+    margin-top: 6px;
+    color: var(--text);
+  }
+
+  /* ── ADD ITEM FORM ── */
+  .add-form {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 16px;
+    margin-bottom: 20px;
+  }
+
+  .add-form-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-lighter);
+    margin-bottom: 14px;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .field-group { display: flex; flex-direction: column; gap: 5px; }
+
+  .field-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--text-lighter);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .field-input {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    color: var(--text);
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s, background 0.2s;
+    width: 100%;
+  }
+
+  .field-input:focus { 
+    border-color: var(--primary); 
+    background: var(--primary-lighter);
+  }
+
+  .field-input::placeholder { color: var(--text-lighter); }
+
+  .add-item-btn {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    background: var(--primary);
+    color: #fff;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 0.9rem;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .add-item-btn:hover { 
+    background: #f56b99;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .add-item-btn:active { transform: none; }
+  .add-item-btn svg { width: 18px; height: 18px; }
+
+  /* ── ITEMS GRID ── */
+  .items-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  .items-grid {
+    display: grid;
+    gap: 8px;
+  }
+
+  .item-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: all 0.2s;
+  }
+
+  .item-card.checked {
+    opacity: 0.6;
+    background: #f5f5f5;
+  }
+
+  .item-card.checked .item-name {
+    text-decoration: line-through;
+    color: var(--text-lighter);
+  }
+
+  .item-card:hover { 
+    border-color: var(--primary);
+    box-shadow: var(--shadow);
+  }
+
+  .item-view {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    padding: 12px 14px;
+    gap: 10px;
+  }
+
+  .item-check {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    border: 2px solid var(--border);
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+
+  .item-check:hover {
+    border-color: var(--primary);
+    background: var(--accent-soft);
+  }
+
+  .item-card.checked .item-check {
+    background: var(--success);
+    border-color: var(--success);
+  }
+
+  .item-check svg {
+    width: 14px;
+    height: 14px;
+    color: white;
+    display: none;
+  }
+
+  .item-card.checked .item-check svg {
+    display: block;
+  }
+
+  .item-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .item-name {
+    font-weight: 500;
+    font-size: 0.95rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .item-details {
+    font-size: 0.75rem;
+    color: var(--text-lighter);
+    margin-top: 2px;
+  }
+
+  .item-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .item-price-input {
+    width: 70px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 8px;
+    color: var(--text);
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.85rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .item-price-input:focus {
+    border-color: var(--primary);
+    background: var(--primary-lighter);
+  }
+
+  .item-subtotal {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--primary);
+    white-space: nowrap;
+    min-width: 65px;
+    text-align: right;
+  }
+
+  .item-actions { display: flex; gap: 4px; }
+
+  /* ── EDIT INLINE ── */
+  .item-edit {
+    display: none;
+    padding: 12px 14px;
+    background: var(--bg);
+    border-top: 1px solid var(--border);
+    gap: 10px;
+    flex-direction: column;
+  }
+
+  .item-card.editing .item-edit { display: flex; }
+  .item-card.editing { border-color: var(--primary); }
+
+  .edit-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 8px;
+  }
+
+  .edit-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+  }
+
+  .btn-sm {
+    padding: 8px 14px;
+    border-radius: 6px;
+    border: none;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .btn-sm.primary { 
+    background: var(--primary); 
+    color: #fff; 
+    font-weight: 600;
+  }
+
+  .btn-sm.primary:hover { background: #f56b99; }
+
+  .btn-sm.ghost { 
+    background: transparent;
+    color: var(--text-light); 
+    border: 1px solid var(--border);
+  }
+
+  .btn-sm.ghost:hover { 
+    color: var(--primary);
+    border-color: var(--primary);
+  }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(4px);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .modal-overlay.active { display: flex; }
+
+  .modal {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    max-width: 420px;
+    width: 100%;
+    box-shadow: var(--shadow-md);
+    animation: modalIn 0.25s ease;
+  }
+
+  @keyframes modalIn {
+    from { opacity: 0; transform: scale(0.95) translateY(10px); }
+    to { opacity: 1; transform: none; }
+  }
+
+  .modal h2 {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
+    font-size: 1.3rem;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+
+  .modal p { 
+    color: var(--text-light); 
+    font-size: 0.9rem; 
+    margin-bottom: 20px; 
+  }
+
+  .modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+
+  .btn { 
+    padding: 10px 18px; 
+    border-radius: 8px; 
+    border: none; 
+    font-family: 'Poppins', sans-serif; 
+    font-size: 0.9rem; 
+    font-weight: 600; 
+    cursor: pointer; 
+    transition: all 0.15s; 
+  }
+
+  .btn.primary { 
+    background: var(--primary); 
+    color: #fff;
+  }
+
+  .btn.primary:hover { 
+    background: #f56b99;
+  }
+
+  .btn.ghost { 
+    background: transparent;
+    color: var(--text-light); 
+    border: 1px solid var(--border);
+  }
+
+  .btn.ghost:hover { 
+    color: var(--primary);
+    border-color: var(--primary);
+  }
+
+  .btn.danger { 
+    background: var(--danger); 
+    color: #fff; 
+  }
+
+  .btn.danger:hover { 
+    background: #d63a2d;
+  }
+
+  /* ── TOAST ── */
+  .toast-container { 
+    position: fixed; 
+    bottom: max(24px, env(safe-area-inset-bottom)); 
+    right: 20px; 
+    z-index: 200; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 8px; 
+    pointer-events: none;
+  }
+
+  .toast {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 0.85rem;
+    color: var(--text);
+    box-shadow: var(--shadow-md);
+    animation: toastIn 0.3s ease, toastOut 0.3s ease 2.5s forwards;
+    max-width: 280px;
+  }
+
+  .toast.success { 
+    border-left: 3px solid var(--success);
+    background: rgba(110, 198, 108, 0.05);
+  }
+
+  .toast.info { 
+    border-left: 3px solid var(--primary);
+    background: var(--accent-soft);
+  }
+
+  @keyframes toastIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: none; } }
+  @keyframes toastOut { to { opacity: 0; transform: translateX(20px); } }
+
+  /* ── BADGE ── */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    background: var(--accent-soft);
+    color: var(--primary);
+    border: none;
+  }
+
+  /* ── EMPTY ITEMS ── */
+  .empty-items {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-lighter);
+    border: 1px dashed var(--border);
+    border-radius: var(--radius-lg);
+  }
+
+  .empty-items svg { width: 36px; height: 36px; margin-bottom: 10px; opacity: 0.3; }
+  .empty-items p { font-size: 0.85rem; }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  /* ── UTILITY ── */
+  .pb-safe { padding-bottom: max(20px, env(safe-area-inset-bottom)); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 640px) {
+    .lists-container {
+      padding: 12px;
+    }
+
+    .lists-grid {
+      width: 100%;
+      overflow-x: hidden;
+    }
+
+    .list-card {
+      flex-wrap: wrap;
+    }
+
+    .form-row {
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+
+    .item-view {
+      grid-template-columns: auto 1fr auto;
+      gap: 8px;
+      padding: 10px 12px;
+    }
+
+    .edit-row {
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+
+    .item-right {
+      gap: 6px;
+    }
+
+    .item-price-input {
+      width: 60px;
+      font-size: 0.8rem;
+      padding: 5px 6px;
+    }
+
+    .item-actions .icon-btn {
+      width: 32px;
+      height: 32px;
+    }
+
+    .item-actions .icon-btn svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── SCREEN: LISTS ─────────────────────────────────── -->
+<div id="screen-lists" class="screen active">
+  <header>
+    <div class="logo">🛒 Minha Lista</div>
+  </header>
+
+  <div class="hero">
+    <h1>Suas <span class="accent">listas</span> de compras</h1>
+    <p>Organize e economize suas compras do mercado</p>
+  </div>
+
+  <div class="lists-container">
+    <button class="new-list-btn" onclick="openNewListModal()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Nova lista
+    </button>
+
+    <div class="section-title">Listas salvas</div>
+    <div class="lists-grid" id="lists-grid"></div>
+  </div>
+</div>
+
+<!-- ── SCREEN: DETAIL ─────────────────────────────────── -->
+<div id="screen-detail" class="screen">
+  <div class="detail-header">
+    <button class="back-btn" onclick="goBack()" title="Voltar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <div class="detail-title-wrap">
+      <input id="detail-title-input" class="detail-title-input" type="text" placeholder="Nome da lista" oninput="updateListName(this.value)">
+    </div>
+  </div>
+
+  <div class="detail-content pb-safe">
+    <!-- Totals -->
+    <div class="totals-bar">
+      <div class="totals-stat">
+        <div class="totals-stat-label">Itens</div>
+        <div class="totals-stat-value" id="total-items">0</div>
+      </div>
+      <div class="totals-stat">
+        <div class="totals-stat-label">Qtd total</div>
+        <div class="totals-stat-value" id="total-qty">0</div>
+      </div>
+      <div class="totals-stat">
+        <div class="totals-stat-label">Total</div>
+        <div class="totals-stat-value" id="total-value">R$ 0,00</div>
+      </div>
+    </div>
+
+    <!-- Add Form -->
+    <div class="add-form">
+      <div class="add-form-title">Adicionar item</div>
+      <div class="form-row">
+        <div class="field-group">
+          <label class="field-label">Nome</label>
+          <input class="field-input" id="input-name" type="text" placeholder="Ex: Arroz 2kg" autocomplete="off">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Qtd</label>
+          <input class="field-input" id="input-qty" type="number" placeholder="1" min="1" step="1" value="1" style="width: 70px;">
+        </div>
+      </div>
+      <button class="add-item-btn" onclick="addItem()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Adicionar item
+      </button>
+    </div>
+
+    <!-- Items -->
+    <div class="items-section-header">
+      <div class="section-title" style="margin:0">Itens da lista</div>
+      <div class="badge" id="items-count-badge">0 itens</div>
+    </div>
+
+    <div class="items-grid" id="items-grid"></div>
+  </div>
+</div>
+
+<!-- ── MODAL: NEW LIST ─────────────────────────────────── -->
+<div class="modal-overlay" id="modal-new-list">
+  <div class="modal">
+    <h2>Nova lista</h2>
+    <p>Dê um nome para sua lista de compras.</p>
+    <div class="field-group" style="margin-bottom:20px">
+      <label class="field-label">Nome da lista</label>
+      <input class="field-input" id="new-list-name" type="text" placeholder="Ex: Compras de Abril/26" autocomplete="off">
+    </div>
+    <div class="modal-actions">
+      <button class="btn ghost" onclick="closeModal('modal-new-list')">Cancelar</button>
+      <button class="btn primary" onclick="createList()">Criar lista</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL: DELETE LIST ─────────────────────────────────── -->
+<div class="modal-overlay" id="modal-delete-list">
+  <div class="modal">
+    <h2>Excluir lista?</h2>
+    <p id="delete-list-msg">Esta ação não pode ser desfeita.</p>
+    <div class="modal-actions">
+      <button class="btn ghost" onclick="closeModal('modal-delete-list')">Cancelar</button>
+      <button class="btn danger" onclick="confirmDeleteList()">Excluir</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL: DELETE ITEM ─────────────────────────────────── -->
+<div class="modal-overlay" id="modal-delete-item">
+  <div class="modal">
+    <h2>Remover item?</h2>
+    <p id="delete-item-msg"></p>
+    <div class="modal-actions">
+      <button class="btn ghost" onclick="closeModal('modal-delete-item')">Cancelar</button>
+      <button class="btn danger" onclick="confirmDeleteItem()">Remover</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── TOAST CONTAINER ── -->
+<div class="toast-container" id="toast-container"></div>
+
+<script>
+// ────────────────────────────────────────────────
+// STATE & STORAGE
+// ────────────────────────────────────────────────
+const STORAGE_KEY = 'minha_lista_v3';
+
+let state = {
+  lists: [],
+  currentListId: null,
+  pendingDeleteListId: null,
+  pendingDeleteItemId: null,
+};
+
+function save() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state.lists));
+}
+
+function load() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) state.lists = JSON.parse(raw);
+  } catch(e) { state.lists = []; }
+}
+
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
+
+// ────────────────────────────────────────────────
+// FORMATTING
+// ────────────────────────────────────────────────
+function fmt(v) {
+  return (Number(v) || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+}
+
+// ────────────────────────────────────────────────
+// LISTS SCREEN
+// ────────────────────────────────────────────────
+function renderLists() {
+  const grid = document.getElementById('lists-grid');
+  if (!state.lists.length) {
+    grid.innerHTML = `
+      <div class="empty-state">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>
+        <p>Nenhuma lista ainda.<br>Crie sua primeira lista acima.</p>
+      </div>`;
+    return;
+  }
+
+  grid.innerHTML = state.lists.map(list => {
+    const total = listTotal(list);
+    const itemCount = list.items.length;
+    return `
+      <div class="list-card" onclick="openList('${list.id}')">
+        <div class="list-card-info">
+          <div class="list-card-name">${escHtml(list.name)}</div>
+          <div class="list-card-meta">${itemCount} ${itemCount === 1 ? 'item' : 'itens'} · ${list.createdAt}</div>
+        </div>
+        <div class="list-card-total">${fmt(total)}</div>
+        <div class="list-card-actions" onclick="event.stopPropagation()">
+          <button class="icon-btn clone" title="Clonar lista" onclick="cloneList('${list.id}')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          </button>
+          <button class="icon-btn danger" title="Excluir lista" onclick="deleteList('${list.id}')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>
+          </button>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function listTotal(list) {
+  return list.items.reduce((s, i) => s + ((i.price || 0) * i.qty), 0);
+}
+
+// ────────────────────────────────────────────────
+// NEW / CLONE LIST
+// ────────────────────────────────────────────────
+function openNewListModal() {
+  document.getElementById('new-list-name').value = '';
+  openModal('modal-new-list');
+  setTimeout(() => document.getElementById('new-list-name').focus(), 100);
+}
+
+function createList(fromItems = [], nameOverride = '') {
+  const nameInput = document.getElementById('new-list-name');
+  const name = nameOverride || nameInput.value.trim();
+  if (!name) { nameInput.focus(); toast('Informe o nome da lista', 'info'); return; }
+
+  const now = new Date();
+  const list = {
+    id: uid(),
+    name,
+    createdAt: now.toLocaleDateString('pt-BR'),
+    items: fromItems.map(i => ({ ...i, id: uid() })),
+  };
+  state.lists.unshift(list);
+  save();
+  closeModal('modal-new-list');
+  renderLists();
+  toast('Lista criada!', 'success');
+  openList(list.id);
+}
+
+function cloneList(id) {
+  const list = state.lists.find(l => l.id === id);
+  if (!list) return;
+  const nameInput = document.getElementById('new-list-name');
+  nameInput.value = list.name + ' (cópia)';
+  openModal('modal-new-list');
+  window._cloneItems = JSON.parse(JSON.stringify(list.items));
+  document.querySelector('#modal-new-list .btn.primary').onclick = function() {
+    const n = nameInput.value.trim();
+    if (!n) { nameInput.focus(); toast('Informe o nome da lista', 'info'); return; }
+    const now = new Date();
+    const newList = {
+      id: uid(),
+      name: n,
+      createdAt: now.toLocaleDateString('pt-BR'),
+      items: (window._cloneItems || []).map(i => ({ ...i, id: uid() })),
+    };
+    state.lists.unshift(newList);
+    save();
+    closeModal('modal-new-list');
+    renderLists();
+    toast('Lista clonada!', 'success');
+    openList(newList.id);
+    document.querySelector('#modal-new-list .btn.primary').onclick = createList;
+    window._cloneItems = null;
+  };
+  setTimeout(() => nameInput.focus(), 100);
+}
+
+// ────────────────────────────────────────────────
+// DELETE LIST
+// ────────────────────────────────────────────────
+function deleteList(id) {
+  const list = state.lists.find(l => l.id === id);
+  if (!list) return;
+  state.pendingDeleteListId = id;
+  document.getElementById('delete-list-msg').textContent =
+    `"${list.name}" será excluída permanentemente.`;
+  openModal('modal-delete-list');
+}
+
+function confirmDeleteList() {
+  state.lists = state.lists.filter(l => l.id !== state.pendingDeleteListId);
+  save();
+  closeModal('modal-delete-list');
+  renderLists();
+  toast('Lista excluída', 'info');
+}
+
+// ────────────────────────────────────────────────
+// DETAIL SCREEN
+// ────────────────────────────────────────────────
+function currentList() {
+  return state.lists.find(l => l.id === state.currentListId);
+}
+
+function openList(id) {
+  state.currentListId = id;
+  const list = currentList();
+  document.getElementById('detail-title-input').value = list.name;
+  showScreen('screen-detail');
+  renderDetail();
+}
+
+function goBack() {
+  showScreen('screen-lists');
+  renderLists();
+}
+
+function updateListName(val) {
+  const list = currentList();
+  if (!list) return;
+  list.name = val;
+  save();
+}
+
+function renderDetail() {
+  const list = currentList();
+  if (!list) return;
+
+  const totalVal = listTotal(list);
+  const totalQty = list.items.reduce((s, i) => s + Number(i.qty), 0);
+  document.getElementById('total-items').textContent = list.items.length;
+  document.getElementById('total-qty').textContent = totalQty;
+  document.getElementById('total-value').textContent = fmt(totalVal);
+  document.getElementById('items-count-badge').textContent =
+    `${list.items.length} ${list.items.length === 1 ? 'item' : 'itens'}`;
+
+  const grid = document.getElementById('items-grid');
+  if (!list.items.length) {
+    grid.innerHTML = `
+      <div class="empty-items">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+        <p>Nenhum item ainda.<br>Adicione o primeiro item acima.</p>
+      </div>`;
+    return;
+  }
+
+  grid.innerHTML = list.items.map((item, idx) => `
+    <div class="item-card ${item.checked ? 'checked' : ''}" id="item-card-${item.id}">
+      <div class="item-view">
+        <button class="item-check" title="Marcar como pego" onclick="toggleCheck('${item.id}'); event.stopPropagation();">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+        </button>
+        <div class="item-info">
+          <div class="item-name">${escHtml(item.name)}</div>
+          <div class="item-details">Qtd: ${item.qty} ${item.qty === 1 ? 'unid.' : 'unids.'}</div>
+        </div>
+        <div class="item-right">
+          <div class="item-subtotal">${fmt((item.price || 0) * item.qty)}</div>
+          <input type="number" class="item-price-input" placeholder="R$" value="${item.price || ''}" min="0" step="0.01" onchange="updateItemPrice('${item.id}', this.value)" title="Valor unitário">
+          <div class="item-actions">
+            <button class="icon-btn" title="Editar" onclick="toggleEdit('${item.id}')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            </button>
+            <button class="icon-btn danger" title="Remover" onclick="deleteItem('${item.id}')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="item-edit" id="item-edit-${item.id}">
+        <div class="edit-row">
+          <div class="field-group">
+            <label class="field-label">Nome</label>
+            <input class="field-input" id="edit-name-${item.id}" type="text" value="${escHtml(item.name)}" autocomplete="off">
+          </div>
+          <div class="field-group">
+            <label class="field-label">Qtd</label>
+            <input class="field-input" id="edit-qty-${item.id}" type="number" value="${item.qty}" min="1" step="1" style="width: 70px;">
+          </div>
+        </div>
+        <div class="edit-actions">
+          <button class="btn-sm ghost" onclick="cancelEdit('${item.id}')">Cancelar</button>
+          <button class="btn-sm primary" onclick="saveEdit('${item.id}')">Salvar</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+// ────────────────────────────────────────────────
+// ADD ITEM
+// ────────────────────────────────────────────────
+function addItem() {
+  const list = currentList();
+  if (!list) return;
+
+  const name = document.getElementById('input-name').value.trim();
+  const qty = parseInt(document.getElementById('input-qty').value) || 1;
+
+  if (!name) { document.getElementById('input-name').focus(); toast('Informe o nome do item', 'info'); return; }
+
+  list.items.push({ id: uid(), name, price: 0, qty, checked: false });
+  save();
+  renderDetail();
+
+  document.getElementById('input-name').value = '';
+  document.getElementById('input-qty').value = '1';
+  document.getElementById('input-name').focus();
+  toast(`"${name}" adicionado`, 'success');
+}
+
+['input-name','input-qty'].forEach(id => {
+  document.getElementById(id).addEventListener('keydown', e => {
+    if (e.key === 'Enter') addItem();
+  });
+});
+
+// ────────────────────────────────────────────────
+// CHECK ITEM
+// ────────────────────────────────────────────────
+function toggleCheck(id) {
+  const list = currentList();
+  const item = list?.items.find(i => i.id === id);
+  if (!item) return;
+  item.checked = !item.checked;
+  save();
+  renderDetail();
+}
+
+// ────────────────────────────────────────────────
+// UPDATE ITEM PRICE
+// ────────────────────────────────────────────────
+function updateItemPrice(id, value) {
+  const list = currentList();
+  const item = list?.items.find(i => i.id === id);
+  if (!item) return;
+  item.price = parseFloat(value) || 0;
+  save();
+  renderDetail();
+}
+
+// ────────────────────────────────────────────────
+// EDIT ITEM
+// ────────────────────────────────────────────────
+function toggleEdit(id) {
+  const card = document.getElementById('item-card-' + id);
+  const isEditing = card.classList.contains('editing');
+  document.querySelectorAll('.item-card.editing').forEach(c => c.classList.remove('editing'));
+  if (!isEditing) {
+    card.classList.add('editing');
+    setTimeout(() => document.getElementById('edit-name-' + id)?.focus(), 50);
+  }
+}
+
+function cancelEdit(id) {
+  document.getElementById('item-card-' + id)?.classList.remove('editing');
+}
+
+function saveEdit(id) {
+  const list = currentList();
+  const item = list?.items.find(i => i.id === id);
+  if (!item) return;
+
+  const name = document.getElementById('edit-name-' + id).value.trim();
+  const qty = parseInt(document.getElementById('edit-qty-' + id).value) || 1;
+
+  if (!name) { document.getElementById('edit-name-' + id).focus(); toast('Informe o nome do item', 'info'); return; }
+
+  item.name = name;
+  item.qty = qty;
+  save();
+  renderDetail();
+  toast('Item atualizado', 'success');
+}
+
+// ────────────────────────────────────────────────
+// DELETE ITEM
+// ────────────────────────────────────────────────
+function deleteItem(id) {
+  const list = currentList();
+  const item = list?.items.find(i => i.id === id);
+  if (!item) return;
+  state.pendingDeleteItemId = id;
+  document.getElementById('delete-item-msg').textContent =
+    `"${item.name}" será removido desta lista.`;
+  openModal('modal-delete-item');
+}
+
+function confirmDeleteItem() {
+  const list = currentList();
+  if (!list) return;
+  list.items = list.items.filter(i => i.id !== state.pendingDeleteItemId);
+  save();
+  closeModal('modal-delete-item');
+  renderDetail();
+  toast('Item removido', 'info');
+}
+
+// ────────────────────────────────────────────────
+// SCREENS
+// ────────────────────────────────────────────────
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ────────────────────────────────────────────────
+// MODALS
+// ────────────────────────────────────────────────
+function openModal(id) {
+  document.getElementById(id).classList.add('active');
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('active');
+}
+
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', e => {
+    if (e.target === overlay) overlay.classList.remove('active');
+  });
+});
+
+document.getElementById('new-list-name').addEventListener('keydown', e => {
+  if (e.key === 'Enter') document.querySelector('#modal-new-list .btn.primary').click();
+});
+
+// ────────────────────────────────────────────────
+// TOAST
+// ────────────────────────────────────────────────
+function toast(msg, type = 'info') {
+  const container = document.getElementById('toast-container');
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.textContent = msg;
+  container.appendChild(el);
+  setTimeout(() => el.remove(), 3000);
+}
+
+// ────────────────────────────────────────────────
+// UTILS
+// ────────────────────────────────────────────────
+function escHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+// ────────────────────────────────────────────────
+// INIT
+// ────────────────────────────────────────────────
+load();
+renderLists();
+</script>
+</body>
+</html>
