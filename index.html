@@ -1217,6 +1217,14 @@ function toggleCheck(id) {
   const item = list?.items.find(i => i.id === id);
   if (!item) return;
   item.checked = !item.checked;
+  
+  // Se marcou como checked, move para o final
+  if (item.checked) {
+    const index = list.items.indexOf(item);
+    list.items.splice(index, 1);
+    list.items.push(item);
+  }
+  
   save();
   renderDetail();
 }
