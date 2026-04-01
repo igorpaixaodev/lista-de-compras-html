@@ -1194,6 +1194,10 @@ function addItem() {
   if (!name) { document.getElementById('input-name').focus(); toast('Informe o nome do item', 'info'); return; }
 
   list.items.push({ id: uid(), name, price: 0, qty, checked: false });
+  
+  // Ordena a lista alfabeticamente
+  list.items = sortItems(list.items);
+  
   save();
   renderDetail();
 
@@ -1210,6 +1214,19 @@ function addItem() {
 });
 
 // ────────────────────────────────────────────────
+// ORDENAR ITEMS
+// ────────────────────────────────────────────────
+function sortItems(items) {
+  const unchecked = items.filter(i => !i.checked).sort((a, b) => 
+    a.name.toLowerCase().localeCompare(b.name.toLowerCase())
+  );
+  const checked = items.filter(i => i.checked).sort((a, b) => 
+    a.name.toLowerCase().localeCompare(b.name.toLowerCase())
+  );
+  return [...unchecked, ...checked];
+}
+
+// ────────────────────────────────────────────────
 // CHECK ITEM
 // ────────────────────────────────────────────────
 function toggleCheck(id) {
@@ -1218,12 +1235,8 @@ function toggleCheck(id) {
   if (!item) return;
   item.checked = !item.checked;
   
-  // Se marcou como checked, move para o final
-  if (item.checked) {
-    const index = list.items.indexOf(item);
-    list.items.splice(index, 1);
-    list.items.push(item);
-  }
+  // Reordena a lista (não-marcados alfabeticamente, marcados no final)
+  list.items = sortItems(list.items);
   
   save();
   renderDetail();
@@ -1270,6 +1283,10 @@ function saveEdit(id) {
 
   item.name = name;
   item.qty = qty;
+  
+  // Reordena a lista após editar
+  list.items = sortItems(list.items);
+  
   save();
   renderDetail();
   toast('Item atualizado', 'success');
