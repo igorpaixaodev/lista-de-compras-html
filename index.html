@@ -1057,20 +1057,28 @@ function cloneList(id) {
       id: uid(),
       name: n,
       createdAt: now.toLocaleDateString('pt-BR'),
-      items: (window._cloneItems || []).map(i => ({ ...i, id: uid() })),
+
+      items: (window._cloneItems || []).map(i => ({
+        id: uid(),
+        name: i.name,
+        checked: false,
+        price: 0,
+        qty: 0
+      })),
     };
+
     state.lists.unshift(newList);
     save();
     closeModal('modal-new-list');
     renderLists();
     toast('Lista clonada!', 'success');
     openList(newList.id);
+
     document.querySelector('#modal-new-list .btn.primary').onclick = createList;
     window._cloneItems = null;
   };
   setTimeout(() => nameInput.focus(), 100);
 }
-
 // ────────────────────────────────────────────────
 // DELETE LIST
 // ────────────────────────────────────────────────
