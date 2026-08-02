@@ -905,4 +905,1075 @@
   }
 
   .btn.danger:hover { 
-    background: 
+    background: #d63a2d;
+  }
+
+  /* ── TOAST ── */
+  .toast-container { 
+    position: fixed; 
+    bottom: max(24px, env(safe-area-inset-bottom)); 
+    right: 20px; 
+    z-index: 200; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 8px; 
+    pointer-events: none;
+  }
+
+  .toast {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 0.85rem;
+    color: var(--text);
+    box-shadow: var(--shadow-md);
+    animation: toastIn 0.3s ease, toastOut 0.3s ease 2.5s forwards;
+    max-width: 280px;
+  }
+
+  .toast.success { 
+    border-left: 3px solid var(--success);
+    background: rgba(110, 198, 108, 0.05);
+  }
+
+  .toast.info { 
+    border-left: 3px solid var(--primary);
+    background: var(--accent-soft);
+  }
+
+  @keyframes toastIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: none; } }
+  @keyframes toastOut { to { opacity: 0; transform: translateX(20px); } }
+
+  /* ── BADGE ── */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    background: var(--accent-soft);
+    color: var(--primary);
+    border: none;
+    white-space: nowrap;
+  }
+
+  /* ── EMPTY ITEMS ── */
+  .empty-items {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-lighter);
+    border: 1px dashed var(--border);
+    border-radius: var(--radius-lg);
+  }
+
+  .empty-items svg { width: 36px; height: 36px; margin-bottom: 10px; opacity: 0.3; }
+  .empty-items p { font-size: 0.85rem; }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  /* ── UTILITY ── */
+  .pb-safe { padding-bottom: max(20px, env(safe-area-inset-bottom)); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 640px) {
+    .lists-container {
+      padding: 12px;
+    }
+
+    .lists-grid {
+      width: 100%;
+      overflow-x: hidden;
+    }
+
+    .list-card {
+      flex-wrap: wrap;
+    }
+
+    .form-row {
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+
+    .item-view {
+      grid-template-columns: auto 1fr auto;
+      gap: 8px;
+      padding: 10px 12px;
+    }
+
+    .item-view.no-check {
+      grid-template-columns: 1fr auto;
+    }
+
+    .edit-row {
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+
+    .item-right {
+      gap: 6px;
+    }
+
+    .item-price-input {
+      width: 60px;
+      font-size: 0.8rem;
+      padding: 5px 6px;
+    }
+
+    .item-actions .icon-btn {
+      width: 32px;
+      height: 32px;
+    }
+
+    .item-actions .icon-btn svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── SCREEN: LISTS ─────────────────────────────────── -->
+<div id="screen-lists" class="screen active">
+  <header>
+    <div class="logo">🛒 Minha Lista</div>
+  </header>
+
+  <div class="hero">
+    <h1>Suas <span class="accent">listas</span> de compras</h1>
+    <p>Organize e economize suas compras do mercado</p>
+  </div>
+
+  <div class="lists-container">
+    <button class="new-list-btn" onclick="openNewListModal()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Nova lista
+    </button>
+
+    <button class="master-btn" onclick="openMaster()">
+      <span class="master-btn-left">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.1 8.6 22 9.6 17 14.5 18.2 21.5 12 18.2 5.8 21.5 7 14.5 2 9.6 8.9 8.6 12 2"/></svg>
+        <span class="master-btn-texts">
+          <span class="master-btn-title">Lista mestre</span>
+          <span class="master-btn-sub">Itens que você sempre compra</span>
+        </span>
+      </span>
+      <span class="badge" id="master-badge">0 itens</span>
+    </button>
+
+    <div class="section-title">Listas salvas</div>
+    <div class="lists-grid" id="lists-grid"></div>
+  </div>
+</div>
+
+<!-- ── SCREEN: MASTER ─────────────────────────────────── -->
+<div id="screen-master" class="screen">
+  <div class="detail-header">
+    <button class="back-btn" onclick="goBack()" title="Voltar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <div class="detail-title-wrap">
+      <div class="detail-static-title">Lista mestre</div>
+      <div class="detail-static-sub">Base para criar novas listas rapidamente</div>
+    </div>
+  </div>
+
+  <div class="detail-content pb-safe">
+    <div class="add-form">
+      <div class="add-form-title">Adicionar item fixo</div>
+      <div class="form-row">
+        <div class="field-group">
+          <label class="field-label">Nome</label>
+          <input class="field-input" id="master-input-name" type="text" placeholder="Ex: Arroz 2kg" autocomplete="off">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Qtd</label>
+          <div class="qty-stepper">
+            <button type="button" class="qty-btn" onclick="stepQty('master-input-qty', -1)" aria-label="Diminuir quantidade">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </button>
+            <input class="qty-value" id="master-input-qty" type="text" inputmode="numeric" value="1" readonly>
+            <button type="button" class="qty-btn" onclick="stepQty('master-input-qty', 1)" aria-label="Aumentar quantidade">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      <button class="add-item-btn" onclick="addMasterItem()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Adicionar à lista mestre
+      </button>
+    </div>
+
+    <div class="items-section-header">
+      <div class="section-title" style="margin:0">Itens fixos</div>
+      <div class="badge" id="master-count-badge">0 itens</div>
+    </div>
+
+    <div class="items-grid" id="master-grid"></div>
+  </div>
+</div>
+
+<!-- ── SCREEN: DETAIL ─────────────────────────────────── -->
+<div id="screen-detail" class="screen">
+  <div class="detail-header">
+    <button class="back-btn" onclick="goBack()" title="Voltar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <div class="detail-title-wrap">
+      <input id="detail-title-input" class="detail-title-input" type="text" placeholder="Nome da lista" oninput="updateListName(this.value)">
+    </div>
+  </div>
+
+  <div class="detail-content pb-safe">
+    <!-- Totals -->
+    <div class="totals-bar">
+      <div class="totals-stat">
+        <div class="totals-stat-label">Itens</div>
+        <div class="totals-stat-value" id="total-items">0</div>
+      </div>
+      <div class="totals-stat">
+        <div class="totals-stat-label">Qtd total</div>
+        <div class="totals-stat-value" id="total-qty">0</div>
+      </div>
+      <div class="totals-stat">
+        <div class="totals-stat-label">Total</div>
+        <div class="totals-stat-value" id="total-value">R$ 0,00</div>
+      </div>
+    </div>
+
+    <!-- Add Form -->
+    <div class="add-form">
+      <div class="add-form-title">Adicionar item</div>
+      <div class="form-row">
+        <div class="field-group">
+          <label class="field-label">Nome</label>
+          <input class="field-input" id="input-name" type="text" placeholder="Ex: Arroz 2kg" autocomplete="off">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Qtd</label>
+          <div class="qty-stepper">
+            <button type="button" class="qty-btn" onclick="stepQty('input-qty', -1)" aria-label="Diminuir quantidade">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </button>
+            <input class="qty-value" id="input-qty" type="text" inputmode="numeric" value="1" readonly>
+            <button type="button" class="qty-btn" onclick="stepQty('input-qty', 1)" aria-label="Aumentar quantidade">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      <button class="add-item-btn" onclick="addItem()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Adicionar item
+      </button>
+    </div>
+
+    <!-- Items -->
+    <div class="items-section-header">
+      <div class="section-title" style="margin:0">Itens da lista</div>
+      <div class="badge" id="items-count-badge">0 itens</div>
+    </div>
+
+    <div class="items-grid" id="items-grid"></div>
+  </div>
+</div>
+
+<!-- ── MODAL: NEW LIST ─────────────────────────────────── -->
+<div class="modal-overlay" id="modal-new-list">
+  <div class="modal">
+    <h2 id="new-list-title">Nova lista</h2>
+    <p id="new-list-desc">Dê um nome para sua lista de compras.</p>
+
+    <div class="field-group" style="margin-bottom:16px">
+      <label class="field-label">Nome da lista</label>
+      <input class="field-input" id="new-list-name" type="text" placeholder="Ex: Compras de Abril/26" autocomplete="off">
+    </div>
+
+    <div class="field-group" id="source-group" style="margin-bottom:16px; display:none">
+      <label class="field-label">Começar a partir de</label>
+      <div class="source-toggle">
+        <button type="button" class="source-opt active" id="source-blank" onclick="setSource('blank')">Lista em branco</button>
+        <button type="button" class="source-opt" id="source-master" onclick="setSource('master')">Lista mestre</button>
+      </div>
+    </div>
+
+    <div id="master-pick-wrap" style="display:none; margin-bottom:20px">
+      <div class="pick-header">
+        <span class="field-label">Itens que vão entrar</span>
+        <button type="button" class="btn-sm ghost" onclick="toggleAllMasterPick()">Marcar todos</button>
+      </div>
+      <div class="pick-list" id="master-pick-list"></div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn ghost" onclick="closeModal('modal-new-list')">Cancelar</button>
+      <button class="btn primary" onclick="submitNewList()">Criar lista</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL: DELETE LIST ─────────────────────────────────── -->
+<div class="modal-overlay" id="modal-delete-list">
+  <div class="modal">
+    <h2>Excluir lista?</h2>
+    <p id="delete-list-msg">Esta ação não pode ser desfeita.</p>
+    <div class="modal-actions">
+      <button class="btn ghost" onclick="closeModal('modal-delete-list')">Cancelar</button>
+      <button class="btn danger" onclick="confirmDeleteList()">Excluir</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL: DELETE ITEM ─────────────────────────────────── -->
+<div class="modal-overlay" id="modal-delete-item">
+  <div class="modal">
+    <h2>Remover item?</h2>
+    <p id="delete-item-msg"></p>
+    <div class="modal-actions">
+      <button class="btn ghost" onclick="closeModal('modal-delete-item')">Cancelar</button>
+      <button class="btn danger" onclick="confirmDeleteItem()">Remover</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL: DELETE MASTER ITEM ─────────────────────────────────── -->
+<div class="modal-overlay" id="modal-delete-master">
+  <div class="modal">
+    <h2>Remover item fixo?</h2>
+    <p id="delete-master-msg"></p>
+    <div class="modal-actions">
+      <button class="btn ghost" onclick="closeModal('modal-delete-master')">Cancelar</button>
+      <button class="btn danger" onclick="confirmDeleteMasterItem()">Remover</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── TOAST CONTAINER ── -->
+<div class="toast-container" id="toast-container"></div>
+
+<script>
+// ────────────────────────────────────────────────
+// STATE & STORAGE
+// ────────────────────────────────────────────────
+const STORAGE_KEY = 'minha_lista_v3';
+const MASTER_KEY = 'minha_lista_master_v1';
+
+let state = {
+  lists: [],
+  master: [],
+  currentListId: null,
+  pendingDeleteListId: null,
+  pendingDeleteItemId: null,
+  pendingDeleteMasterId: null,
+  // fluxo do modal de nova lista
+  modalMode: 'new',      // 'new' | 'clone'
+  newListSource: 'blank',// 'blank' | 'master'
+  masterPickIds: [],     // ids da lista mestre selecionados
+  cloneItems: [],
+};
+
+function save() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state.lists));
+  } catch (e) {
+    toast('Não foi possível salvar suas listas neste navegador', 'info');
+  }
+}
+
+function saveMaster() {
+  try {
+    localStorage.setItem(MASTER_KEY, JSON.stringify(state.master));
+  } catch (e) {
+    toast('Não foi possível salvar a lista mestre neste navegador', 'info');
+  }
+}
+
+function load() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) state.lists = JSON.parse(raw);
+  } catch(e) { state.lists = []; }
+
+  try {
+    const rawM = localStorage.getItem(MASTER_KEY);
+    if (rawM) state.master = JSON.parse(rawM);
+  } catch(e) { state.master = []; }
+}
+
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
+
+// ────────────────────────────────────────────────
+// FORMATTING
+// ────────────────────────────────────────────────
+function fmt(v) {
+  return (Number(v) || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+}
+
+function plural(n) { return n === 1 ? 'item' : 'itens'; }
+
+// ────────────────────────────────────────────────
+// LISTS SCREEN
+// ────────────────────────────────────────────────
+function renderLists() {
+  document.getElementById('master-badge').textContent =
+    `${state.master.length} ${plural(state.master.length)}`;
+
+  const grid = document.getElementById('lists-grid');
+  if (!state.lists.length) {
+    grid.innerHTML = `
+      <div class="empty-state">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>
+        <p>Nenhuma lista ainda.<br>Crie sua primeira lista acima.</p>
+      </div>`;
+    return;
+  }
+
+  grid.innerHTML = state.lists.map(list => {
+    const total = listTotal(list);
+    const itemCount = list.items.length;
+    return `
+      <div class="list-card" onclick="openList('${list.id}')">
+        <div class="list-card-info">
+          <div class="list-card-name">${escHtml(list.name)}</div>
+          <div class="list-card-meta">${itemCount} ${plural(itemCount)} · ${list.createdAt}</div>
+        </div>
+        <div class="list-card-total">${fmt(total)}</div>
+        <div class="list-card-actions" onclick="event.stopPropagation()">
+          <button class="icon-btn clone" title="Clonar lista" onclick="cloneList('${list.id}')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          </button>
+          <button class="icon-btn danger" title="Excluir lista" onclick="deleteList('${list.id}')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>
+          </button>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function listTotal(list) {
+  return list.items.reduce((s, i) => s + ((i.price || 0) * i.qty), 0);
+}
+
+// ────────────────────────────────────────────────
+// MASTER LIST
+// ────────────────────────────────────────────────
+function openMaster() {
+  showScreen('screen-master');
+  renderMaster();
+}
+
+function sortMaster(items) {
+  return [...items].sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
+}
+
+function addMasterItem() {
+  const nameEl = document.getElementById('master-input-name');
+  const qtyEl = document.getElementById('master-input-qty');
+  const name = nameEl.value.trim();
+  const qty = parseInt(qtyEl.value) || 1;
+
+  if (!name) { nameEl.focus(); toast('Informe o nome do item', 'info'); return; }
+
+  state.master.push({ id: uid(), name, qty });
+  state.master = sortMaster(state.master);
+  saveMaster();
+  renderMaster();
+
+  nameEl.value = '';
+  qtyEl.value = '1';
+  refreshStepper(qtyEl);
+  nameEl.focus();
+  toast(`"${name}" adicionado à lista mestre`, 'success');
+}
+
+function renderMaster() {
+  document.getElementById('master-count-badge').textContent =
+    `${state.master.length} ${plural(state.master.length)}`;
+
+  const grid = document.getElementById('master-grid');
+  if (!state.master.length) {
+    grid.innerHTML = `
+      <div class="empty-items">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 15.1 8.6 22 9.6 17 14.5 18.2 21.5 12 18.2 5.8 21.5 7 14.5 2 9.6 8.9 8.6 12 2"/></svg>
+        <p>Nenhum item fixo ainda.<br>Cadastre o que você sempre compra.</p>
+      </div>`;
+    return;
+  }
+
+  grid.innerHTML = state.master.map(item => `
+    <div class="item-card" id="master-card-${item.id}">
+      <div class="item-view no-check">
+        <div class="item-info">
+          <div class="item-name">${escHtml(item.name)}</div>
+          <div class="item-details">Qtd padrão: ${item.qty} ${item.qty === 1 ? 'unid.' : 'unids.'}</div>
+        </div>
+        <div class="item-right">
+          <div class="item-actions">
+            <button class="icon-btn" title="Editar" onclick="toggleMasterEdit('${item.id}')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            </button>
+            <button class="icon-btn danger" title="Remover" onclick="deleteMasterItem('${item.id}')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="item-edit">
+        <div class="edit-row">
+          <div class="field-group">
+            <label class="field-label">Nome</label>
+            <input class="field-input" id="master-edit-name-${item.id}" type="text" value="${escHtml(item.name)}" autocomplete="off">
+          </div>
+          <div class="field-group">
+            <label class="field-label">Qtd</label>
+            <div class="qty-stepper">
+              <button type="button" class="qty-btn" onclick="stepQty('master-edit-qty-${item.id}', -1)" aria-label="Diminuir quantidade">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              </button>
+              <input class="qty-value" id="master-edit-qty-${item.id}" type="text" inputmode="numeric" value="${item.qty}" readonly>
+              <button type="button" class="qty-btn" onclick="stepQty('master-edit-qty-${item.id}', 1)" aria-label="Aumentar quantidade">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="edit-actions">
+          <button class="btn-sm ghost" onclick="cancelMasterEdit('${item.id}')">Cancelar</button>
+          <button class="btn-sm primary" onclick="saveMasterEdit('${item.id}')">Salvar</button>
+        </div>
+      </div>
+    </div>`).join('');
+
+  refreshAllSteppers('master-grid');
+}
+
+function toggleMasterEdit(id) {
+  const card = document.getElementById('master-card-' + id);
+  const isEditing = card.classList.contains('editing');
+  document.querySelectorAll('#master-grid .item-card.editing').forEach(c => c.classList.remove('editing'));
+  if (!isEditing) {
+    card.classList.add('editing');
+    setTimeout(() => document.getElementById('master-edit-name-' + id)?.focus(), 50);
+  }
+}
+
+function cancelMasterEdit(id) {
+  document.getElementById('master-card-' + id)?.classList.remove('editing');
+}
+
+function saveMasterEdit(id) {
+  const item = state.master.find(i => i.id === id);
+  if (!item) return;
+
+  const nameEl = document.getElementById('master-edit-name-' + id);
+  const name = nameEl.value.trim();
+  const qty = parseInt(document.getElementById('master-edit-qty-' + id).value) || 1;
+
+  if (!name) { nameEl.focus(); toast('Informe o nome do item', 'info'); return; }
+
+  item.name = name;
+  item.qty = qty;
+  state.master = sortMaster(state.master);
+  saveMaster();
+  renderMaster();
+  toast('Item fixo atualizado', 'success');
+}
+
+function deleteMasterItem(id) {
+  const item = state.master.find(i => i.id === id);
+  if (!item) return;
+  state.pendingDeleteMasterId = id;
+  document.getElementById('delete-master-msg').textContent =
+    `"${item.name}" sai da lista mestre. Listas já criadas não mudam.`;
+  openModal('modal-delete-master');
+}
+
+function confirmDeleteMasterItem() {
+  state.master = state.master.filter(i => i.id !== state.pendingDeleteMasterId);
+  saveMaster();
+  closeModal('modal-delete-master');
+  renderMaster();
+  toast('Item removido da lista mestre', 'info');
+}
+
+['master-input-name','master-input-qty'].forEach(id => {
+  document.getElementById(id).addEventListener('keydown', e => {
+    if (e.key === 'Enter') addMasterItem();
+  });
+});
+
+// ────────────────────────────────────────────────
+// NEW LIST MODAL (em branco / lista mestre / clone)
+// ────────────────────────────────────────────────
+function openNewListModal() {
+  state.modalMode = 'new';
+  state.cloneItems = [];
+  state.newListSource = state.master.length ? 'master' : 'blank';
+  state.masterPickIds = state.master.map(i => i.id);
+
+  document.getElementById('new-list-title').textContent = 'Nova lista';
+  document.getElementById('new-list-desc').textContent = 'Dê um nome e escolha por onde começar.';
+  document.getElementById('new-list-name').value = '';
+  document.getElementById('source-group').style.display = state.master.length ? 'flex' : 'none';
+
+  renderSourceToggle();
+  openModal('modal-new-list');
+  setTimeout(() => document.getElementById('new-list-name').focus(), 100);
+}
+
+function setSource(src) {
+  state.newListSource = src;
+  renderSourceToggle();
+}
+
+function renderSourceToggle() {
+  const isMaster = state.newListSource === 'master' && state.master.length > 0;
+  document.getElementById('source-blank').classList.toggle('active', !isMaster);
+  document.getElementById('source-master').classList.toggle('active', isMaster);
+  document.getElementById('master-pick-wrap').style.display =
+    (isMaster && state.modalMode === 'new') ? 'block' : 'none';
+  if (isMaster) renderMasterPick();
+}
+
+function renderMasterPick() {
+  const wrap = document.getElementById('master-pick-list');
+  wrap.innerHTML = state.master.map(item => `
+    <div class="pick-row ${state.masterPickIds.includes(item.id) ? 'selected' : ''}" onclick="toggleMasterPick('${item.id}')">
+      <span class="pick-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+      </span>
+      <span class="pick-name">${escHtml(item.name)}</span>
+      <span class="pick-qty">${item.qty} un.</span>
+    </div>`).join('');
+}
+
+function toggleMasterPick(id) {
+  if (state.masterPickIds.includes(id)) {
+    state.masterPickIds = state.masterPickIds.filter(x => x !== id);
+  } else {
+    state.masterPickIds.push(id);
+  }
+  renderMasterPick();
+}
+
+function toggleAllMasterPick() {
+  const allSelected = state.masterPickIds.length === state.master.length;
+  state.masterPickIds = allSelected ? [] : state.master.map(i => i.id);
+  renderMasterPick();
+}
+
+function submitNewList() {
+  const nameInput = document.getElementById('new-list-name');
+  const name = nameInput.value.trim();
+  if (!name) { nameInput.focus(); toast('Informe o nome da lista', 'info'); return; }
+
+  let items = [];
+
+  if (state.modalMode === 'clone') {
+    items = (state.cloneItems || []).map(i => ({
+      id: uid(),
+      name: i.name,
+      checked: false,
+      price: 0,
+      qty: 0
+    }));
+  } else if (state.newListSource === 'master') {
+    items = state.master
+      .filter(i => state.masterPickIds.includes(i.id))
+      .map(i => ({
+        id: uid(),
+        name: i.name,
+        checked: false,
+        price: 0,
+        qty: i.qty || 1
+      }));
+  }
+
+  const now = new Date();
+  const list = {
+    id: uid(),
+    name,
+    createdAt: now.toLocaleDateString('pt-BR'),
+    items: sortItems(items),
+  };
+
+  state.lists.unshift(list);
+  save();
+  closeModal('modal-new-list');
+  renderLists();
+
+  if (state.modalMode === 'clone') toast('Lista clonada!', 'success');
+  else if (items.length) toast(`Lista criada com ${items.length} ${plural(items.length)}`, 'success');
+  else toast('Lista criada!', 'success');
+
+  state.modalMode = 'new';
+  state.cloneItems = [];
+  openList(list.id);
+}
+
+function cloneList(id) {
+  const list = state.lists.find(l => l.id === id);
+  if (!list) return;
+
+  state.modalMode = 'clone';
+  state.cloneItems = JSON.parse(JSON.stringify(list.items));
+
+  document.getElementById('new-list-title').textContent = 'Clonar lista';
+  document.getElementById('new-list-desc').textContent = 'Os itens são copiados sem valores e quantidades.';
+  document.getElementById('new-list-name').value = list.name + ' (cópia)';
+  document.getElementById('source-group').style.display = 'none';
+  document.getElementById('master-pick-wrap').style.display = 'none';
+
+  openModal('modal-new-list');
+  setTimeout(() => document.getElementById('new-list-name').focus(), 100);
+}
+
+// ────────────────────────────────────────────────
+// DELETE LIST
+// ────────────────────────────────────────────────
+function deleteList(id) {
+  const list = state.lists.find(l => l.id === id);
+  if (!list) return;
+  state.pendingDeleteListId = id;
+  document.getElementById('delete-list-msg').textContent =
+    `"${list.name}" será excluída permanentemente.`;
+  openModal('modal-delete-list');
+}
+
+function confirmDeleteList() {
+  state.lists = state.lists.filter(l => l.id !== state.pendingDeleteListId);
+  save();
+  closeModal('modal-delete-list');
+  renderLists();
+  toast('Lista excluída', 'info');
+}
+
+// ────────────────────────────────────────────────
+// DETAIL SCREEN
+// ────────────────────────────────────────────────
+function currentList() {
+  return state.lists.find(l => l.id === state.currentListId);
+}
+
+function openList(id) {
+  state.currentListId = id;
+  const list = currentList();
+  document.getElementById('detail-title-input').value = list.name;
+  showScreen('screen-detail');
+  renderDetail();
+}
+
+function goBack() {
+  showScreen('screen-lists');
+  renderLists();
+}
+
+function updateListName(val) {
+  const list = currentList();
+  if (!list) return;
+  list.name = val;
+  save();
+}
+
+function renderDetail() {
+  const list = currentList();
+  if (!list) return;
+
+  const totalVal = listTotal(list);
+  const totalQty = list.items.reduce((s, i) => s + Number(i.qty), 0);
+  document.getElementById('total-items').textContent = list.items.length;
+  document.getElementById('total-qty').textContent = totalQty;
+  document.getElementById('total-value').textContent = fmt(totalVal);
+  document.getElementById('items-count-badge').textContent =
+    `${list.items.length} ${plural(list.items.length)}`;
+
+  const grid = document.getElementById('items-grid');
+  if (!list.items.length) {
+    grid.innerHTML = `
+      <div class="empty-items">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+        <p>Nenhum item ainda.<br>Adicione o primeiro item acima.</p>
+      </div>`;
+    return;
+  }
+
+  grid.innerHTML = list.items.map((item, idx) => `
+    <div class="item-card ${item.checked ? 'checked' : ''}" id="item-card-${item.id}">
+      <div class="item-view">
+        <button class="item-check" title="Marcar como pego" onclick="toggleCheck('${item.id}'); event.stopPropagation();">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+        </button>
+        <div class="item-info">
+          <div class="item-name">${escHtml(item.name)}</div>
+          <div class="item-details">Qtd: ${item.qty} ${item.qty === 1 ? 'unid.' : 'unids.'}</div>
+        </div>
+        <div class="item-right">
+          <input type="number" class="item-price-input" placeholder="R$" value="${item.price || ''}" min="0" step="0.01" onchange="updateItemPrice('${item.id}', this.value)" title="Valor unitário">
+          <div class="item-subtotal">${fmt((item.price || 0) * item.qty)}</div>
+          <div class="item-actions">
+            <button class="icon-btn" title="Editar" onclick="toggleEdit('${item.id}')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            </button>
+            <button class="icon-btn danger" title="Remover" onclick="deleteItem('${item.id}')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="item-edit" id="item-edit-${item.id}">
+        <div class="edit-row">
+          <div class="field-group">
+            <label class="field-label">Nome</label>
+            <input class="field-input" id="edit-name-${item.id}" type="text" value="${escHtml(item.name)}" autocomplete="off">
+          </div>
+          <div class="field-group">
+            <label class="field-label">Qtd</label>
+            <div class="qty-stepper">
+              <button type="button" class="qty-btn" onclick="stepQty('edit-qty-${item.id}', -1)" aria-label="Diminuir quantidade">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              </button>
+              <input class="qty-value" id="edit-qty-${item.id}" type="text" inputmode="numeric" value="${item.qty}" readonly>
+              <button type="button" class="qty-btn" onclick="stepQty('edit-qty-${item.id}', 1)" aria-label="Aumentar quantidade">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="edit-actions">
+          <button class="btn-sm ghost" onclick="cancelEdit('${item.id}')">Cancelar</button>
+          <button class="btn-sm primary" onclick="saveEdit('${item.id}')">Salvar</button>
+        </div>
+      </div>
+    </div>`).join('');
+
+  refreshAllSteppers('items-grid');
+}
+
+// ────────────────────────────────────────────────
+// ADD ITEM
+// ────────────────────────────────────────────────
+function addItem() {
+  const list = currentList();
+  if (!list) return;
+
+  const name = document.getElementById('input-name').value.trim();
+  const qty = parseInt(document.getElementById('input-qty').value) || 1;
+
+  if (!name) { document.getElementById('input-name').focus(); toast('Informe o nome do item', 'info'); return; }
+
+  list.items.push({ id: uid(), name, price: 0, qty, checked: false });
+
+  // Ordena a lista alfabeticamente
+  list.items = sortItems(list.items);
+
+  save();
+  renderDetail();
+
+  document.getElementById('input-name').value = '';
+  document.getElementById('input-qty').value = '1';
+  refreshStepper(document.getElementById('input-qty'));
+  document.getElementById('input-name').focus();
+  toast(`"${name}" adicionado`, 'success');
+}
+
+['input-name','input-qty'].forEach(id => {
+  document.getElementById(id).addEventListener('keydown', e => {
+    if (e.key === 'Enter') addItem();
+  });
+});
+
+// ────────────────────────────────────────────────
+// ORDENAR ITEMS
+// ────────────────────────────────────────────────
+function sortItems(items) {
+  const unchecked = items.filter(i => !i.checked).sort((a, b) => 
+    a.name.toLowerCase().localeCompare(b.name.toLowerCase())
+  );
+  const checked = items.filter(i => i.checked).sort((a, b) => 
+    a.name.toLowerCase().localeCompare(b.name.toLowerCase())
+  );
+  return [...unchecked, ...checked];
+}
+
+// ────────────────────────────────────────────────
+// CHECK ITEM
+// ────────────────────────────────────────────────
+function toggleCheck(id) {
+  const list = currentList();
+  const item = list?.items.find(i => i.id === id);
+  if (!item) return;
+  item.checked = !item.checked;
+
+  // Reordena a lista (não-marcados alfabeticamente, marcados no final)
+  list.items = sortItems(list.items);
+
+  save();
+  renderDetail();
+}
+
+// ────────────────────────────────────────────────
+// UPDATE ITEM PRICE
+// ────────────────────────────────────────────────
+function updateItemPrice(id, value) {
+  const list = currentList();
+  const item = list?.items.find(i => i.id === id);
+  if (!item) return;
+  item.price = parseFloat(value) || 0;
+  save();
+  renderDetail();
+}
+
+// ────────────────────────────────────────────────
+// EDIT ITEM
+// ────────────────────────────────────────────────
+function toggleEdit(id) {
+  const card = document.getElementById('item-card-' + id);
+  const isEditing = card.classList.contains('editing');
+  document.querySelectorAll('#items-grid .item-card.editing').forEach(c => c.classList.remove('editing'));
+  if (!isEditing) {
+    card.classList.add('editing');
+    setTimeout(() => document.getElementById('edit-name-' + id)?.focus(), 50);
+  }
+}
+
+function cancelEdit(id) {
+  document.getElementById('item-card-' + id)?.classList.remove('editing');
+}
+
+function saveEdit(id) {
+  const list = currentList();
+  const item = list?.items.find(i => i.id === id);
+  if (!item) return;
+
+  const name = document.getElementById('edit-name-' + id).value.trim();
+  const qty = parseInt(document.getElementById('edit-qty-' + id).value) || 1;
+
+  if (!name) { document.getElementById('edit-name-' + id).focus(); toast('Informe o nome do item', 'info'); return; }
+
+  item.name = name;
+  item.qty = qty;
+
+  // Reordena a lista após editar
+  list.items = sortItems(list.items);
+
+  save();
+  renderDetail();
+  toast('Item atualizado', 'success');
+}
+
+// ────────────────────────────────────────────────
+// DELETE ITEM
+// ────────────────────────────────────────────────
+function deleteItem(id) {
+  const list = currentList();
+  const item = list?.items.find(i => i.id === id);
+  if (!item) return;
+  state.pendingDeleteItemId = id;
+  document.getElementById('delete-item-msg').textContent =
+    `"${item.name}" será removido desta lista.`;
+  openModal('modal-delete-item');
+}
+
+function confirmDeleteItem() {
+  const list = currentList();
+  if (!list) return;
+  list.items = list.items.filter(i => i.id !== state.pendingDeleteItemId);
+  save();
+  closeModal('modal-delete-item');
+  renderDetail();
+  toast('Item removido', 'info');
+}
+
+// ────────────────────────────────────────────────
+// SCREENS
+// ────────────────────────────────────────────────
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ────────────────────────────────────────────────
+// MODALS
+// ────────────────────────────────────────────────
+function openModal(id) {
+  document.getElementById(id).classList.add('active');
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('active');
+}
+
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', e => {
+    if (e.target === overlay) overlay.classList.remove('active');
+  });
+});
+
+document.getElementById('new-list-name').addEventListener('keydown', e => {
+  if (e.key === 'Enter') submitNewList();
+});
+
+// ────────────────────────────────────────────────
+// TOAST
+// ────────────────────────────────────────────────
+function toast(msg, type = 'info') {
+  const container = document.getElementById('toast-container');
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.textContent = msg;
+  container.appendChild(el);
+  setTimeout(() => el.remove(), 3000);
+}
+
+// ────────────────────────────────────────────────
+// QTY STEPPER
+// ────────────────────────────────────────────────
+function stepQty(id, delta) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const parsed = parseInt(el.value, 10);
+  const current = Number.isNaN(parsed) ? 1 : parsed;
+  const value = Math.max(1, current + delta);
+  el.value = value;
+  refreshStepper(el);
+}
+
+function refreshStepper(el) {
+  const minusBtn = el.previousElementSibling;
+  if (!minusBtn) return;
+  const parsed = parseInt(el.value, 10);
+  minusBtn.disabled = Number.isNaN(parsed) || parsed <= 1;
+}
+
+function refreshAllSteppers(scopeId) {
+  const scope = scopeId ? document.getElementById(scopeId) : document;
+  scope?.querySelectorAll('.qty-value').forEach(refreshStepper);
+}
+
+// ────────────────────────────────────────────────
+// UTILS
+// ────────────────────────────────────────────────
+function escHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+// ────────────────────────────────────────────────
+// INIT
+// ────────────────────────────────────────────────
+load();
+renderLists();
+refreshAllSteppers();
+</script>
+</body>
+</html>
