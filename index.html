@@ -117,7 +117,7 @@
     align-items: center;
     justify-content: center;
     gap: 8px;
-    margin-bottom: 24px;
+    margin-bottom: 12px;
   }
 
   .new-list-btn:hover {
@@ -126,6 +126,56 @@
   }
 
   .new-list-btn svg { width: 20px; height: 20px; }
+
+  /* ── MASTER ENTRY ── */
+  .master-btn {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--bg-secondary);
+    color: var(--text);
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 24px;
+    text-align: left;
+  }
+
+  .master-btn:hover {
+    border-color: var(--primary);
+    background: var(--primary-lighter);
+    box-shadow: var(--shadow);
+  }
+
+  .master-btn-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+  }
+
+  .master-btn-left svg { width: 20px; height: 20px; color: var(--primary); flex-shrink: 0; }
+
+  .master-btn-texts { min-width: 0; }
+
+  .master-btn-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 600;
+    font-size: 0.95rem;
+    line-height: 1.3;
+  }
+
+  .master-btn-sub {
+    font-size: 0.75rem;
+    color: var(--text-lighter);
+  }
 
   .section-title {
     font-family: 'Plus Jakarta Sans', sans-serif;
@@ -293,6 +343,19 @@
   .detail-title-input:focus { border-bottom-color: var(--primary); }
   .detail-title-input::placeholder { color: var(--text-lighter); }
 
+  .detail-static-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
+    font-size: clamp(1.3rem, 5vw, 1.8rem);
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+
+  .detail-static-sub {
+    font-size: 0.78rem;
+    color: var(--text-lighter);
+  }
+
   .detail-content {
     max-width: 100%;
     margin: 0 auto;
@@ -387,6 +450,57 @@
 
   .field-input::placeholder { color: var(--text-lighter); }
 
+  /* ── QTY STEPPER ── */
+  .qty-stepper {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 3px;
+    align-self: start;
+    width: max-content;
+  }
+
+  .qty-btn {
+    width: 34px;
+    height: 34px;
+    border: none;
+    border-radius: 6px;
+    background: var(--bg-secondary);
+    color: var(--primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    flex-shrink: 0;
+  }
+
+  .qty-btn:hover { background: var(--primary); color: #fff; }
+  .qty-btn:active { transform: scale(0.94); }
+  .qty-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+  .qty-btn:disabled:hover { background: var(--bg-secondary); color: var(--primary); }
+  .qty-btn svg { width: 16px; height: 16px; }
+
+  .qty-value {
+    width: 42px;
+    text-align: center;
+    border: none;
+    background: transparent;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--text);
+    outline: none;
+    padding: 0;
+    -moz-appearance: textfield;
+  }
+
+  .qty-value::-webkit-outer-spin-button,
+  .qty-value::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
   .add-item-btn {
     width: 100%;
     padding: 12px;
@@ -458,6 +572,10 @@
     align-items: center;
     padding: 12px 14px;
     gap: 10px;
+  }
+
+  .item-view.no-check {
+    grid-template-columns: 1fr auto;
   }
 
   .item-check {
@@ -627,6 +745,8 @@
     padding: 24px;
     max-width: 420px;
     width: 100%;
+    max-height: 88vh;
+    overflow-y: auto;
     box-shadow: var(--shadow-md);
     animation: modalIn 0.25s ease;
   }
@@ -652,6 +772,101 @@
   }
 
   .modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+
+  /* ── SOURCE PICKER ── */
+  .source-toggle {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .source-opt {
+    padding: 12px 10px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text-light);
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: center;
+  }
+
+  .source-opt:hover { border-color: var(--primary); color: var(--text); }
+
+  .source-opt.active {
+    border-color: var(--primary);
+    background: var(--primary-lighter);
+    color: var(--primary);
+    font-weight: 600;
+  }
+
+  .pick-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+
+  .pick-list {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    max-height: 210px;
+    overflow-y: auto;
+    background: var(--bg);
+  }
+
+  .pick-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .pick-row:last-child { border-bottom: none; }
+  .pick-row:hover { background: var(--primary-lighter); }
+
+  .pick-box {
+    width: 20px;
+    height: 20px;
+    border-radius: 5px;
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.15s;
+  }
+
+  .pick-box svg { width: 12px; height: 12px; color: #fff; display: none; }
+
+  .pick-row.selected .pick-box {
+    background: var(--primary);
+    border-color: var(--primary);
+  }
+
+  .pick-row.selected .pick-box svg { display: block; }
+
+  .pick-name {
+    font-size: 0.88rem;
+    flex: 1;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .pick-qty {
+    font-size: 0.75rem;
+    color: var(--text-lighter);
+    white-space: nowrap;
+  }
 
   .btn { 
     padding: 10px 18px; 
@@ -741,6 +956,7 @@
     background: var(--accent-soft);
     color: var(--primary);
     border: none;
+    white-space: nowrap;
   }
 
   /* ── EMPTY ITEMS ── */
@@ -789,6 +1005,10 @@
       padding: 10px 12px;
     }
 
+    .item-view.no-check {
+      grid-template-columns: 1fr auto;
+    }
+
     .edit-row {
       grid-template-columns: 1fr;
       gap: 8px;
@@ -835,8 +1055,67 @@
       Nova lista
     </button>
 
+    <button class="master-btn" onclick="openMaster()">
+      <span class="master-btn-left">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.1 8.6 22 9.6 17 14.5 18.2 21.5 12 18.2 5.8 21.5 7 14.5 2 9.6 8.9 8.6 12 2"/></svg>
+        <span class="master-btn-texts">
+          <span class="master-btn-title">Lista mestre</span>
+          <span class="master-btn-sub">Itens que você sempre compra</span>
+        </span>
+      </span>
+      <span class="badge" id="master-badge">0 itens</span>
+    </button>
+
     <div class="section-title">Listas salvas</div>
     <div class="lists-grid" id="lists-grid"></div>
+  </div>
+</div>
+
+<!-- ── SCREEN: MASTER ─────────────────────────────────── -->
+<div id="screen-master" class="screen">
+  <div class="detail-header">
+    <button class="back-btn" onclick="goBack()" title="Voltar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <div class="detail-title-wrap">
+      <div class="detail-static-title">Lista mestre</div>
+      <div class="detail-static-sub">Base para criar novas listas rapidamente</div>
+    </div>
+  </div>
+
+  <div class="detail-content pb-safe">
+    <div class="add-form">
+      <div class="add-form-title">Adicionar item fixo</div>
+      <div class="form-row">
+        <div class="field-group">
+          <label class="field-label">Nome</label>
+          <input class="field-input" id="master-input-name" type="text" placeholder="Ex: Arroz 2kg" autocomplete="off">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Qtd</label>
+          <div class="qty-stepper">
+            <button type="button" class="qty-btn" onclick="stepQty('master-input-qty', -1)" aria-label="Diminuir quantidade">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </button>
+            <input class="qty-value" id="master-input-qty" type="text" inputmode="numeric" value="1" readonly>
+            <button type="button" class="qty-btn" onclick="stepQty('master-input-qty', 1)" aria-label="Aumentar quantidade">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      <button class="add-item-btn" onclick="addMasterItem()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Adicionar à lista mestre
+      </button>
+    </div>
+
+    <div class="items-section-header">
+      <div class="section-title" style="margin:0">Itens fixos</div>
+      <div class="badge" id="master-count-badge">0 itens</div>
+    </div>
+
+    <div class="items-grid" id="master-grid"></div>
   </div>
 </div>
 
@@ -878,7 +1157,15 @@
         </div>
         <div class="field-group">
           <label class="field-label">Qtd</label>
-          <input class="field-input" id="input-qty" type="number" placeholder="1" min="1" step="1" value="1" style="width: 70px;">
+          <div class="qty-stepper">
+            <button type="button" class="qty-btn" onclick="stepQty('input-qty', -1)" aria-label="Diminuir quantidade">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </button>
+            <input class="qty-value" id="input-qty" type="text" inputmode="numeric" value="1" readonly>
+            <button type="button" class="qty-btn" onclick="stepQty('input-qty', 1)" aria-label="Aumentar quantidade">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </button>
+          </div>
         </div>
       </div>
       <button class="add-item-btn" onclick="addItem()">
@@ -900,15 +1187,33 @@
 <!-- ── MODAL: NEW LIST ─────────────────────────────────── -->
 <div class="modal-overlay" id="modal-new-list">
   <div class="modal">
-    <h2>Nova lista</h2>
-    <p>Dê um nome para sua lista de compras.</p>
-    <div class="field-group" style="margin-bottom:20px">
+    <h2 id="new-list-title">Nova lista</h2>
+    <p id="new-list-desc">Dê um nome para sua lista de compras.</p>
+
+    <div class="field-group" style="margin-bottom:16px">
       <label class="field-label">Nome da lista</label>
       <input class="field-input" id="new-list-name" type="text" placeholder="Ex: Compras de Abril/26" autocomplete="off">
     </div>
+
+    <div class="field-group" id="source-group" style="margin-bottom:16px; display:none">
+      <label class="field-label">Começar a partir de</label>
+      <div class="source-toggle">
+        <button type="button" class="source-opt active" id="source-blank" onclick="setSource('blank')">Lista em branco</button>
+        <button type="button" class="source-opt" id="source-master" onclick="setSource('master')">Lista mestre</button>
+      </div>
+    </div>
+
+    <div id="master-pick-wrap" style="display:none; margin-bottom:20px">
+      <div class="pick-header">
+        <span class="field-label">Itens que vão entrar</span>
+        <button type="button" class="btn-sm ghost" onclick="toggleAllMasterPick()">Marcar todos</button>
+      </div>
+      <div class="pick-list" id="master-pick-list"></div>
+    </div>
+
     <div class="modal-actions">
       <button class="btn ghost" onclick="closeModal('modal-new-list')">Cancelar</button>
-      <button class="btn primary" onclick="createList()">Criar lista</button>
+      <button class="btn primary" onclick="submitNewList()">Criar lista</button>
     </div>
   </div>
 </div>
@@ -937,6 +1242,18 @@
   </div>
 </div>
 
+<!-- ── MODAL: DELETE MASTER ITEM ─────────────────────────────────── -->
+<div class="modal-overlay" id="modal-delete-master">
+  <div class="modal">
+    <h2>Remover item fixo?</h2>
+    <p id="delete-master-msg"></p>
+    <div class="modal-actions">
+      <button class="btn ghost" onclick="closeModal('modal-delete-master')">Cancelar</button>
+      <button class="btn danger" onclick="confirmDeleteMasterItem()">Remover</button>
+    </div>
+  </div>
+</div>
+
 <!-- ── TOAST CONTAINER ── -->
 <div class="toast-container" id="toast-container"></div>
 
@@ -945,16 +1262,36 @@
 // STATE & STORAGE
 // ────────────────────────────────────────────────
 const STORAGE_KEY = 'minha_lista_v3';
+const MASTER_KEY = 'minha_lista_master_v1';
 
 let state = {
   lists: [],
+  master: [],
   currentListId: null,
   pendingDeleteListId: null,
   pendingDeleteItemId: null,
+  pendingDeleteMasterId: null,
+  // fluxo do modal de nova lista
+  modalMode: 'new',      // 'new' | 'clone'
+  newListSource: 'blank',// 'blank' | 'master'
+  masterPickIds: [],     // ids da lista mestre selecionados
+  cloneItems: [],
 };
 
 function save() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state.lists));
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state.lists));
+  } catch (e) {
+    toast('Não foi possível salvar suas listas neste navegador', 'info');
+  }
+}
+
+function saveMaster() {
+  try {
+    localStorage.setItem(MASTER_KEY, JSON.stringify(state.master));
+  } catch (e) {
+    toast('Não foi possível salvar a lista mestre neste navegador', 'info');
+  }
 }
 
 function load() {
@@ -962,6 +1299,11 @@ function load() {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) state.lists = JSON.parse(raw);
   } catch(e) { state.lists = []; }
+
+  try {
+    const rawM = localStorage.getItem(MASTER_KEY);
+    if (rawM) state.master = JSON.parse(rawM);
+  } catch(e) { state.master = []; }
 }
 
 function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
@@ -973,10 +1315,15 @@ function fmt(v) {
   return (Number(v) || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 }
 
+function plural(n) { return n === 1 ? 'item' : 'itens'; }
+
 // ────────────────────────────────────────────────
 // LISTS SCREEN
 // ────────────────────────────────────────────────
 function renderLists() {
+  document.getElementById('master-badge').textContent =
+    `${state.master.length} ${plural(state.master.length)}`;
+
   const grid = document.getElementById('lists-grid');
   if (!state.lists.length) {
     grid.innerHTML = `
@@ -994,7 +1341,7 @@ function renderLists() {
       <div class="list-card" onclick="openList('${list.id}')">
         <div class="list-card-info">
           <div class="list-card-name">${escHtml(list.name)}</div>
-          <div class="list-card-meta">${itemCount} ${itemCount === 1 ? 'item' : 'itens'} · ${list.createdAt}</div>
+          <div class="list-card-meta">${itemCount} ${plural(itemCount)} · ${list.createdAt}</div>
         </div>
         <div class="list-card-total">${fmt(total)}</div>
         <div class="list-card-actions" onclick="event.stopPropagation()">
@@ -1014,71 +1361,279 @@ function listTotal(list) {
 }
 
 // ────────────────────────────────────────────────
-// NEW / CLONE LIST
+// MASTER LIST
+// ────────────────────────────────────────────────
+function openMaster() {
+  showScreen('screen-master');
+  renderMaster();
+}
+
+function sortMaster(items) {
+  return [...items].sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
+}
+
+function addMasterItem() {
+  const nameEl = document.getElementById('master-input-name');
+  const qtyEl = document.getElementById('master-input-qty');
+  const name = nameEl.value.trim();
+  const qty = parseInt(qtyEl.value) || 1;
+
+  if (!name) { nameEl.focus(); toast('Informe o nome do item', 'info'); return; }
+
+  state.master.push({ id: uid(), name, qty });
+  state.master = sortMaster(state.master);
+  saveMaster();
+  renderMaster();
+
+  nameEl.value = '';
+  qtyEl.value = '1';
+  refreshStepper(qtyEl);
+  nameEl.focus();
+  toast(`"${name}" adicionado à lista mestre`, 'success');
+}
+
+function renderMaster() {
+  document.getElementById('master-count-badge').textContent =
+    `${state.master.length} ${plural(state.master.length)}`;
+
+  const grid = document.getElementById('master-grid');
+  if (!state.master.length) {
+    grid.innerHTML = `
+      <div class="empty-items">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 15.1 8.6 22 9.6 17 14.5 18.2 21.5 12 18.2 5.8 21.5 7 14.5 2 9.6 8.9 8.6 12 2"/></svg>
+        <p>Nenhum item fixo ainda.<br>Cadastre o que você sempre compra.</p>
+      </div>`;
+    return;
+  }
+
+  grid.innerHTML = state.master.map(item => `
+    <div class="item-card" id="master-card-${item.id}">
+      <div class="item-view no-check">
+        <div class="item-info">
+          <div class="item-name">${escHtml(item.name)}</div>
+          <div class="item-details">Qtd padrão: ${item.qty} ${item.qty === 1 ? 'unid.' : 'unids.'}</div>
+        </div>
+        <div class="item-right">
+          <div class="item-actions">
+            <button class="icon-btn" title="Editar" onclick="toggleMasterEdit('${item.id}')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            </button>
+            <button class="icon-btn danger" title="Remover" onclick="deleteMasterItem('${item.id}')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="item-edit">
+        <div class="edit-row">
+          <div class="field-group">
+            <label class="field-label">Nome</label>
+            <input class="field-input" id="master-edit-name-${item.id}" type="text" value="${escHtml(item.name)}" autocomplete="off">
+          </div>
+          <div class="field-group">
+            <label class="field-label">Qtd</label>
+            <div class="qty-stepper">
+              <button type="button" class="qty-btn" onclick="stepQty('master-edit-qty-${item.id}', -1)" aria-label="Diminuir quantidade">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              </button>
+              <input class="qty-value" id="master-edit-qty-${item.id}" type="text" inputmode="numeric" value="${item.qty}" readonly>
+              <button type="button" class="qty-btn" onclick="stepQty('master-edit-qty-${item.id}', 1)" aria-label="Aumentar quantidade">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="edit-actions">
+          <button class="btn-sm ghost" onclick="cancelMasterEdit('${item.id}')">Cancelar</button>
+          <button class="btn-sm primary" onclick="saveMasterEdit('${item.id}')">Salvar</button>
+        </div>
+      </div>
+    </div>`).join('');
+
+  refreshAllSteppers('master-grid');
+}
+
+function toggleMasterEdit(id) {
+  const card = document.getElementById('master-card-' + id);
+  const isEditing = card.classList.contains('editing');
+  document.querySelectorAll('#master-grid .item-card.editing').forEach(c => c.classList.remove('editing'));
+  if (!isEditing) {
+    card.classList.add('editing');
+    setTimeout(() => document.getElementById('master-edit-name-' + id)?.focus(), 50);
+  }
+}
+
+function cancelMasterEdit(id) {
+  document.getElementById('master-card-' + id)?.classList.remove('editing');
+}
+
+function saveMasterEdit(id) {
+  const item = state.master.find(i => i.id === id);
+  if (!item) return;
+
+  const nameEl = document.getElementById('master-edit-name-' + id);
+  const name = nameEl.value.trim();
+  const qty = parseInt(document.getElementById('master-edit-qty-' + id).value) || 1;
+
+  if (!name) { nameEl.focus(); toast('Informe o nome do item', 'info'); return; }
+
+  item.name = name;
+  item.qty = qty;
+  state.master = sortMaster(state.master);
+  saveMaster();
+  renderMaster();
+  toast('Item fixo atualizado', 'success');
+}
+
+function deleteMasterItem(id) {
+  const item = state.master.find(i => i.id === id);
+  if (!item) return;
+  state.pendingDeleteMasterId = id;
+  document.getElementById('delete-master-msg').textContent =
+    `"${item.name}" sai da lista mestre. Listas já criadas não mudam.`;
+  openModal('modal-delete-master');
+}
+
+function confirmDeleteMasterItem() {
+  state.master = state.master.filter(i => i.id !== state.pendingDeleteMasterId);
+  saveMaster();
+  closeModal('modal-delete-master');
+  renderMaster();
+  toast('Item removido da lista mestre', 'info');
+}
+
+['master-input-name','master-input-qty'].forEach(id => {
+  document.getElementById(id).addEventListener('keydown', e => {
+    if (e.key === 'Enter') addMasterItem();
+  });
+});
+
+// ────────────────────────────────────────────────
+// NEW LIST MODAL (em branco / lista mestre / clone)
 // ────────────────────────────────────────────────
 function openNewListModal() {
+  state.modalMode = 'new';
+  state.cloneItems = [];
+  state.newListSource = state.master.length ? 'master' : 'blank';
+  state.masterPickIds = state.master.map(i => i.id);
+
+  document.getElementById('new-list-title').textContent = 'Nova lista';
+  document.getElementById('new-list-desc').textContent = 'Dê um nome e escolha por onde começar.';
   document.getElementById('new-list-name').value = '';
+  document.getElementById('source-group').style.display = state.master.length ? 'flex' : 'none';
+
+  renderSourceToggle();
   openModal('modal-new-list');
   setTimeout(() => document.getElementById('new-list-name').focus(), 100);
 }
 
-function createList(fromItems = [], nameOverride = '') {
+function setSource(src) {
+  state.newListSource = src;
+  renderSourceToggle();
+}
+
+function renderSourceToggle() {
+  const isMaster = state.newListSource === 'master' && state.master.length > 0;
+  document.getElementById('source-blank').classList.toggle('active', !isMaster);
+  document.getElementById('source-master').classList.toggle('active', isMaster);
+  document.getElementById('master-pick-wrap').style.display =
+    (isMaster && state.modalMode === 'new') ? 'block' : 'none';
+  if (isMaster) renderMasterPick();
+}
+
+function renderMasterPick() {
+  const wrap = document.getElementById('master-pick-list');
+  wrap.innerHTML = state.master.map(item => `
+    <div class="pick-row ${state.masterPickIds.includes(item.id) ? 'selected' : ''}" onclick="toggleMasterPick('${item.id}')">
+      <span class="pick-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+      </span>
+      <span class="pick-name">${escHtml(item.name)}</span>
+      <span class="pick-qty">${item.qty} un.</span>
+    </div>`).join('');
+}
+
+function toggleMasterPick(id) {
+  if (state.masterPickIds.includes(id)) {
+    state.masterPickIds = state.masterPickIds.filter(x => x !== id);
+  } else {
+    state.masterPickIds.push(id);
+  }
+  renderMasterPick();
+}
+
+function toggleAllMasterPick() {
+  const allSelected = state.masterPickIds.length === state.master.length;
+  state.masterPickIds = allSelected ? [] : state.master.map(i => i.id);
+  renderMasterPick();
+}
+
+function submitNewList() {
   const nameInput = document.getElementById('new-list-name');
-  const name = nameOverride || nameInput.value.trim();
+  const name = nameInput.value.trim();
   if (!name) { nameInput.focus(); toast('Informe o nome da lista', 'info'); return; }
+
+  let items = [];
+
+  if (state.modalMode === 'clone') {
+    items = (state.cloneItems || []).map(i => ({
+      id: uid(),
+      name: i.name,
+      checked: false,
+      price: 0,
+      qty: 0
+    }));
+  } else if (state.newListSource === 'master') {
+    items = state.master
+      .filter(i => state.masterPickIds.includes(i.id))
+      .map(i => ({
+        id: uid(),
+        name: i.name,
+        checked: false,
+        price: 0,
+        qty: i.qty || 1
+      }));
+  }
 
   const now = new Date();
   const list = {
     id: uid(),
     name,
     createdAt: now.toLocaleDateString('pt-BR'),
-    items: fromItems.map(i => ({ ...i, id: uid() })),
+    items: sortItems(items),
   };
+
   state.lists.unshift(list);
   save();
   closeModal('modal-new-list');
   renderLists();
-  toast('Lista criada!', 'success');
+
+  if (state.modalMode === 'clone') toast('Lista clonada!', 'success');
+  else if (items.length) toast(`Lista criada com ${items.length} ${plural(items.length)}`, 'success');
+  else toast('Lista criada!', 'success');
+
+  state.modalMode = 'new';
+  state.cloneItems = [];
   openList(list.id);
 }
 
 function cloneList(id) {
   const list = state.lists.find(l => l.id === id);
   if (!list) return;
-  const nameInput = document.getElementById('new-list-name');
-  nameInput.value = list.name + ' (cópia)';
+
+  state.modalMode = 'clone';
+  state.cloneItems = JSON.parse(JSON.stringify(list.items));
+
+  document.getElementById('new-list-title').textContent = 'Clonar lista';
+  document.getElementById('new-list-desc').textContent = 'Os itens são copiados sem valores e quantidades.';
+  document.getElementById('new-list-name').value = list.name + ' (cópia)';
+  document.getElementById('source-group').style.display = 'none';
+  document.getElementById('master-pick-wrap').style.display = 'none';
+
   openModal('modal-new-list');
-  window._cloneItems = JSON.parse(JSON.stringify(list.items));
-  document.querySelector('#modal-new-list .btn.primary').onclick = function() {
-    const n = nameInput.value.trim();
-    if (!n) { nameInput.focus(); toast('Informe o nome da lista', 'info'); return; }
-    const now = new Date();
-    const newList = {
-      id: uid(),
-      name: n,
-      createdAt: now.toLocaleDateString('pt-BR'),
-
-      items: (window._cloneItems || []).map(i => ({
-        id: uid(),
-        name: i.name,
-        checked: false,
-        price: 0,
-        qty: 0
-      })),
-    };
-
-    state.lists.unshift(newList);
-    save();
-    closeModal('modal-new-list');
-    renderLists();
-    toast('Lista clonada!', 'success');
-    openList(newList.id);
-
-    document.querySelector('#modal-new-list .btn.primary').onclick = createList;
-    window._cloneItems = null;
-  };
-  setTimeout(() => nameInput.focus(), 100);
+  setTimeout(() => document.getElementById('new-list-name').focus(), 100);
 }
+
 // ────────────────────────────────────────────────
 // DELETE LIST
 // ────────────────────────────────────────────────
@@ -1136,7 +1691,7 @@ function renderDetail() {
   document.getElementById('total-qty').textContent = totalQty;
   document.getElementById('total-value').textContent = fmt(totalVal);
   document.getElementById('items-count-badge').textContent =
-    `${list.items.length} ${list.items.length === 1 ? 'item' : 'itens'}`;
+    `${list.items.length} ${plural(list.items.length)}`;
 
   const grid = document.getElementById('items-grid');
   if (!list.items.length) {
@@ -1179,7 +1734,15 @@ function renderDetail() {
           </div>
           <div class="field-group">
             <label class="field-label">Qtd</label>
-            <input class="field-input" id="edit-qty-${item.id}" type="number" value="${item.qty}" min="1" step="1" style="width: 70px;">
+            <div class="qty-stepper">
+              <button type="button" class="qty-btn" onclick="stepQty('edit-qty-${item.id}', -1)" aria-label="Diminuir quantidade">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              </button>
+              <input class="qty-value" id="edit-qty-${item.id}" type="text" inputmode="numeric" value="${item.qty}" readonly>
+              <button type="button" class="qty-btn" onclick="stepQty('edit-qty-${item.id}', 1)" aria-label="Aumentar quantidade">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              </button>
+            </div>
           </div>
         </div>
         <div class="edit-actions">
@@ -1188,6 +1751,8 @@ function renderDetail() {
         </div>
       </div>
     </div>`).join('');
+
+  refreshAllSteppers('items-grid');
 }
 
 // ────────────────────────────────────────────────
@@ -1203,15 +1768,16 @@ function addItem() {
   if (!name) { document.getElementById('input-name').focus(); toast('Informe o nome do item', 'info'); return; }
 
   list.items.push({ id: uid(), name, price: 0, qty, checked: false });
-  
+
   // Ordena a lista alfabeticamente
   list.items = sortItems(list.items);
-  
+
   save();
   renderDetail();
 
   document.getElementById('input-name').value = '';
   document.getElementById('input-qty').value = '1';
+  refreshStepper(document.getElementById('input-qty'));
   document.getElementById('input-name').focus();
   toast(`"${name}" adicionado`, 'success');
 }
@@ -1243,10 +1809,10 @@ function toggleCheck(id) {
   const item = list?.items.find(i => i.id === id);
   if (!item) return;
   item.checked = !item.checked;
-  
+
   // Reordena a lista (não-marcados alfabeticamente, marcados no final)
   list.items = sortItems(list.items);
-  
+
   save();
   renderDetail();
 }
@@ -1269,7 +1835,7 @@ function updateItemPrice(id, value) {
 function toggleEdit(id) {
   const card = document.getElementById('item-card-' + id);
   const isEditing = card.classList.contains('editing');
-  document.querySelectorAll('.item-card.editing').forEach(c => c.classList.remove('editing'));
+  document.querySelectorAll('#items-grid .item-card.editing').forEach(c => c.classList.remove('editing'));
   if (!isEditing) {
     card.classList.add('editing');
     setTimeout(() => document.getElementById('edit-name-' + id)?.focus(), 50);
@@ -1292,10 +1858,10 @@ function saveEdit(id) {
 
   item.name = name;
   item.qty = qty;
-  
+
   // Reordena a lista após editar
   list.items = sortItems(list.items);
-  
+
   save();
   renderDetail();
   toast('Item atualizado', 'success');
@@ -1351,7 +1917,7 @@ document.querySelectorAll('.modal-overlay').forEach(overlay => {
 });
 
 document.getElementById('new-list-name').addEventListener('keydown', e => {
-  if (e.key === 'Enter') document.querySelector('#modal-new-list .btn.primary').click();
+  if (e.key === 'Enter') submitNewList();
 });
 
 // ────────────────────────────────────────────────
@@ -1364,6 +1930,27 @@ function toast(msg, type = 'info') {
   el.textContent = msg;
   container.appendChild(el);
   setTimeout(() => el.remove(), 3000);
+}
+
+// ────────────────────────────────────────────────
+// QTY STEPPER
+// ────────────────────────────────────────────────
+function stepQty(id, delta) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const value = Math.max(1, (parseInt(el.value) || 1) + delta);
+  el.value = value;
+  refreshStepper(el);
+}
+
+function refreshStepper(el) {
+  const minusBtn = el.previousElementSibling;
+  if (minusBtn) minusBtn.disabled = (parseInt(el.value) || 1) <= 1;
+}
+
+function refreshAllSteppers(scopeId) {
+  const scope = scopeId ? document.getElementById(scopeId) : document;
+  scope?.querySelectorAll('.qty-value').forEach(refreshStepper);
 }
 
 // ────────────────────────────────────────────────
@@ -1382,6 +1969,7 @@ function escHtml(str) {
 // ────────────────────────────────────────────────
 load();
 renderLists();
+refreshAllSteppers();
 </script>
 </body>
 </html>
